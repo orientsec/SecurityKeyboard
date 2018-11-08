@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/dset_btn_keyboard_special_press_bg" />
+    <item
+        android:bottom="6dp"
+        android:drawable="@drawable/dset_ic_keyboard_hide_black_32dp"
+        android:left="20dp"
+        android:right="20dp"
+        android:top="6dp" />
+
+</layer-list>

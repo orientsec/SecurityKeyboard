@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="keyboardVoice" format="boolean" />
+    <attr name="keyboardFrameId" format="reference" />
+    <attr name="inputType" format="enum">
+        <enum name="num" value="0x01" />
+        <enum name="id" value="0x02" />
+        <enum name="numOnly" value="0x03" />
+        <enum name="typical" value="0x04" />
+        <enum name="stockNum" value="0x05" />
+        <enum name="stockLetter" value="0x06" />
+    </attr>
+    <declare-styleable name="SecurityEditText">
+        <attr name="keyboardVoice" />
+        <attr name="inputType" />
+        <attr name="keyboardFrameId" />
+    </declare-styleable>
+</resources>

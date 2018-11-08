@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dset_view_bolder">#e5e5e5</color>
+    <color name="dset_white">#e5e5e5</color>
+    <color name="dset_text_black">#1F1F1F</color>
+</resources>
