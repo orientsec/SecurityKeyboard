@@ -2,10 +2,12 @@ package com.dfzq.dset;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatEditText;
 
 
 /**
@@ -16,7 +18,7 @@ import android.view.View;
  * Coding is an art not science
  */
 
-public class SecurityEditText extends android.support.v7.widget.AppCompatEditText implements SecurityEditTextInterface {
+public class SecurityEditText extends AppCompatEditText implements SecurityEditTextInterface {
     private SecurityEditTextDelegate delegate;
     private VoiceInputStateChangeListener voiceInputStateChangeListener;
 

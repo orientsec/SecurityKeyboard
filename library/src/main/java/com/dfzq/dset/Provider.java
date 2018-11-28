@@ -1,6 +1,6 @@
 package com.dfzq.dset;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public interface Provider<T> {
     @NonNull

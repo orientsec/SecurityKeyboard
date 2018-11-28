@@ -8,10 +8,11 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import java.util.List;
+
+import androidx.core.content.ContextCompat;
 
 import static android.inputmethodservice.Keyboard.KEYCODE_MODE_CHANGE;
 
@@ -56,6 +57,7 @@ public abstract class SecretKeyboardView extends KeyboardView {
 
     protected void drawKeyBackground(int drawableId, Canvas canvas, Keyboard.Key key) {
         Drawable npd = ContextCompat.getDrawable(getContext(), drawableId);
+        if (npd == null) return;
         int[] drawableState = key.getCurrentDrawableState();
         if (key.codes[0] != 0) {
             npd.setState(drawableState);
