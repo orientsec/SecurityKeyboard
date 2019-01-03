@@ -43,7 +43,7 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
                 Method setShowSoftInputOnFocus;
                 setShowSoftInputOnFocus = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
                 setShowSoftInputOnFocus.setAccessible(true);
-                setShowSoftInputOnFocus.invoke(this, false);
+                setShowSoftInputOnFocus.invoke(editText, false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
