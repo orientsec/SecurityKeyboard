@@ -34,7 +34,8 @@ import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_TYPICAL;
  */
 
 class DsetKeyboard {
-    private boolean needRandom = true;           // 是否随机
+    // 是否随机
+    static boolean needRandom = true;
     private IDKeyboardView idKeyboardView;
     private LetterKeyboardView letterKeyboardView;
     private NumOnlyKeyboardView numOnlyKeyboardView;
@@ -78,7 +79,7 @@ class DsetKeyboard {
         voiceLayout = dialog.findViewById(R.id.voice_layout);
         voiceView = dialog.findViewById(R.id.voice_view);
         frameLayout = dialog.findViewById(R.id.keyboard_view);
-        initVoice(context, null);
+        recognizer = new VoiceRecognizer(voiceLayout, voiceView);
     }
 
     DsetKeyboard(ViewGroup parent) {
@@ -87,11 +88,7 @@ class DsetKeyboard {
         voiceLayout = parent.findViewById(R.id.voice_layout);
         voiceView = parent.findViewById(R.id.voice_view);
         frameLayout = parent.findViewById(R.id.keyboard_view);
-        initVoice(context, parent);
-    }
-
-    private void initVoice(Context context, ViewGroup parent) {
-        recognizer = new VoiceRecognizer(context, voiceLayout, voiceView);
+        recognizer = new VoiceRecognizer(voiceLayout, voiceView);
     }
 
     void hideKeyboardImme() {
@@ -124,7 +121,7 @@ class DsetKeyboard {
         }
     }
 
-    public void showVoiceView(boolean flag) {
+    void showVoiceView(boolean flag) {
         if (flag) {
             keyboardView.setVisibility(View.INVISIBLE);
             voiceView.setVisibility(View.VISIBLE);
@@ -145,14 +142,14 @@ class DsetKeyboard {
         } else {
             voiceLayout.setVisibility(View.GONE);
         }
-        setKeyboardView(type, voice);
+        setKeyboardView(type);
         if (dialog != null) {
             handler.removeMessages(2);
             handler.sendEmptyMessageDelayed(1, 30);
         }
     }
 
-    private void setKeyboardView(int type, boolean voice) {
+    private void setKeyboardView(int type) {
         switch (type) {
             case KEYBOARD_NUM:
                 if (numKeyboardView != null && keyboardView == numKeyboardView) {
@@ -239,7 +236,7 @@ class DsetKeyboard {
                     break;
             }
             EditText editText = getFocus();
-            if (editText != null && (editText instanceof SecurityEditTextInterface)) {
+            if (editText instanceof SecurityEditTextInterface) {
                 keyboardView.setHideEnable(((SecurityEditTextInterface) editText).isHideEnable());
             }
             keyboardView.setKeyboard(keyboard);

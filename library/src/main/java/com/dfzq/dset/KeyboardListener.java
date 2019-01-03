@@ -68,7 +68,7 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
     public void onKey(int primaryCode, int[] keyCodes) {
         KeyboardManager keyboardManager = KeyboardManager.getInstance();
         EditText editText = dsetKeyboard.getFocus();
-        if (editText == null || !(editText instanceof SecurityEditTextInterface)) {
+        if (!(editText instanceof SecurityEditTextInterface)) {
             return;
         }
         SecurityEditTextInterface securityEditTextInterface = (SecurityEditTextInterface) editText;

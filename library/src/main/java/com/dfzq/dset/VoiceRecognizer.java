@@ -1,16 +1,15 @@
 package com.dfzq.dset;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.dfzq.dset.provider.DefaultRecognizer;
+import com.dfzq.dset.provider.Recognizer;
+import com.dfzq.dset.provider.RecognizerListener;
 import com.dfzq.dset.view.VoiceLayout;
-
-
-import com.dfzq.dset.provider.*;
 
 /**
  * Created by djy on 2018/1/4.
@@ -25,10 +24,10 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
     private boolean stopFlag;
     private Recognizer recognizer;
 
-    public VoiceRecognizer(Context context, View voiceLayout, VoiceLayout lineView) {
+    public VoiceRecognizer(View voiceLayout, VoiceLayout lineView) {
         this.lineView = lineView;
         if (voiceLayout != null) {
-            voiceImg = (ImageView) voiceLayout.findViewById(R.id.iv_voice);
+            voiceImg = voiceLayout.findViewById(R.id.iv_voice);
             voiceLayout.setOnTouchListener(this);
         }
         recognizer = getRecognizer();

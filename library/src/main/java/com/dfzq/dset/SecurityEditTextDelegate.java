@@ -157,10 +157,7 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
 
     @Override
     public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && hideSoftKeyboard()) {
-            return true;
-        }
-        return false;
+        return keyCode == KeyEvent.KEYCODE_BACK && hideSoftKeyboard();
     }
 
     @Override

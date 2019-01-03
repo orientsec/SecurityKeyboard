@@ -34,6 +34,7 @@ public class KeyboardManager {
     private Map<View, DsetKeyboard> viewKeyboardMap = new WeakHashMap<>();
     private Map<Context, DsetKeyboard> dialogKeyboardMap = new WeakHashMap<>();
     private Provider<Recognizer> provider;
+
     public static KeyboardManager getInstance() {
         if (keyboardManager == null) {
             synchronized (KeyboardManager.class) {
@@ -72,24 +73,17 @@ public class KeyboardManager {
     /**
      * Validate EditText state
      *
-     * @param editText
-     * @return
+     * @param editText 输入框
+     * @return 输入框是否获取焦点
      */
     private boolean validEditText(EditText editText) {
         if (!(editText instanceof SecurityEditTextInterface)) {
             return false;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (editText.isAttachedToWindow()) {
-                return true;
-            } else {
-                return false;
-            }
+            return editText.isAttachedToWindow();
         }
-        if (!editText.isFocused()) {
-            return false;
-        }
-        return true;
+        return editText.isFocused();
     }
 
     public void showVoiceLineView(EditText editText, boolean flag) {

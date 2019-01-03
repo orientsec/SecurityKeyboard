@@ -33,6 +33,7 @@ class KeyboardDialog extends Dialog implements View.OnClickListener {
 
     private void initialize() {
         Window window = getWindow();
+        if (window == null) return;
         window.getDecorView().setPadding(0, 0, 0, 0);
         window.setGravity(Gravity.BOTTOM);
         window.setWindowAnimations(R.style.dsetDialogWindowAnim); //设置窗口弹出动画
