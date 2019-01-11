@@ -168,7 +168,7 @@ public class KeyboardManager {
                 activity.getFragmentManager()
                         .beginTransaction()
                         .add(new MonitorFragment(), "DsetMonitorFragment")
-                        .commit();
+                        .commitAllowingStateLoss();
             }
         }
         return keyboard;
