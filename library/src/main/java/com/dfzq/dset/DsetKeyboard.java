@@ -35,7 +35,6 @@ import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_TYPICAL;
 
 class DsetKeyboard {
     // 是否随机
-    static boolean needRandom = true;
     private IDKeyboardView idKeyboardView;
     private LetterKeyboardView letterKeyboardView;
     private NumOnlyKeyboardView numOnlyKeyboardView;
@@ -203,7 +202,7 @@ class DsetKeyboard {
                     numKeyboardView = (NumKeyboardView) inflater.inflate(R.layout.dset_keyboard_num, frameLayout, false);
                     keyboardView = numKeyboardView;
                     keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_num);
-                    if (needRandom) {
+                    if (KeyboardManager.needRandom) {
                         randomNumKey(keyboard.getKeys());
                     }
                     break;
@@ -211,7 +210,7 @@ class DsetKeyboard {
                     numOnlyKeyboardView = (NumOnlyKeyboardView) inflater.inflate(R.layout.dset_keyboard_num_only, frameLayout, false);
                     keyboardView = numOnlyKeyboardView;
                     keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_num_only);
-                    if (needRandom) {
+                    if (KeyboardManager.needRandom) {
                         randomNumOnlyKey(keyboard.getKeys());
                     }
                     break;
@@ -230,7 +229,7 @@ class DsetKeyboard {
                     letterKeyboardView = (LetterKeyboardView) inflater.inflate(R.layout.dset_keyboard_letter, frameLayout, false);
                     keyboardView = letterKeyboardView;
                     keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_abc);
-                    if (needRandom) {
+                    if (KeyboardManager.needRandom) {
                         randomTypicalKey(keyboard.getKeys());
                     }
                     break;

@@ -26,6 +26,7 @@ import java.util.WeakHashMap;
  */
 
 public class KeyboardManager {
+    public static boolean needRandom = false;
     private static KeyboardManager keyboardManager;
     public static int logo = R.drawable.dset_keyboard_special_btn_bg;
     private WeakReference<DsetKeyboard> keyboardWeakReference;
