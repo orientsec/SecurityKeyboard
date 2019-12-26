@@ -41,6 +41,7 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
     private static final int KEYCODE_300 = -13;
     private static final int KEYCODE_00 = -14;
     private static final int KEYCODE_IF = -15;
+    private static final int KEYCODE_SWITCH_SYSTEM = -16;
 
     private SecretKeyboardView keyboardView;
     private DsetKeyboard dsetKeyboard;
@@ -78,6 +79,9 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
         switch (primaryCode) {
             case SPACE:
             case BLANK:
+                break;
+            case KEYCODE_SWITCH_SYSTEM:
+                ((SecurityEditTextInterface) editText).switchSoftKeyboardWithSystem();
                 break;
             case KEYCODE_600:
             case KEYCODE_601:

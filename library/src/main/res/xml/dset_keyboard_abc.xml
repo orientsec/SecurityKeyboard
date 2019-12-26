@@ -111,12 +111,21 @@
         <Key
             android:codes="-2"
             android:keyLabel="@string/dset_char123"
-            android:keyWidth="23.375%p"/>
+            android:keyWidth="15.8%p" />
+        <Key
+            android:codes="-16"
+            android:keyLabel="@string/chinese"
+            android:keyWidth="15.8%p" />
         <Key
             android:codes="32"
-            android:keyWidth="48.05%p"/>
+            android:keyWidth="31.6%p" />
+        <Key
+            android:codes="46"
+            android:keyLabel="."
+            android:keyWidth="15.8%p" />
         <Key
             android:codes="-4"
-            android:keyWidth="23.375%p"/>
+            android:keyWidth="15.8%p" />
+
     </Row>
 </Keyboard>

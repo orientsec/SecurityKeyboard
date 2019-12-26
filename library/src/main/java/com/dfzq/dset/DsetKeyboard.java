@@ -76,18 +76,36 @@ class DsetKeyboard {
         this.context = context;
         dialog = new KeyboardDialog(context, R.style.dsetKeyboardDialog);
         voiceLayout = dialog.findViewById(R.id.voice_layout);
+        View btnVoice = dialog.findViewById(R.id.btn_voice);
+        dialog.findViewById(R.id.rl_switch_system_keyboard).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editText != null && editText instanceof SecurityEditTextInterface) {
+                    ((SecurityEditTextInterface) editText).switchSoftKeyboardWithSystem();
+                }
+            }
+        });
         voiceView = dialog.findViewById(R.id.voice_view);
         frameLayout = dialog.findViewById(R.id.keyboard_view);
-        recognizer = new VoiceRecognizer(voiceLayout, voiceView);
+        recognizer = new VoiceRecognizer(btnVoice, voiceView);
     }
 
     DsetKeyboard(ViewGroup parent) {
         this.context = parent.getContext();
         LayoutInflater.from(context).inflate(R.layout.dset_keyboard_layout, parent);
         voiceLayout = parent.findViewById(R.id.voice_layout);
+        View btnVoice = dialog.findViewById(R.id.btn_voice);
+        dialog.findViewById(R.id.rl_switch_system_keyboard).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editText != null && editText instanceof SecurityEditTextInterface) {
+                    ((SecurityEditTextInterface) editText).switchSoftKeyboardWithSystem();
+                }
+            }
+        });
         voiceView = parent.findViewById(R.id.voice_view);
         frameLayout = parent.findViewById(R.id.keyboard_view);
-        recognizer = new VoiceRecognizer(voiceLayout, voiceView);
+        recognizer = new VoiceRecognizer(btnVoice, voiceView);
     }
 
     void hideKeyboardImme() {

@@ -132,8 +132,18 @@ public class SecurityAutoCompleteEditText extends AppCompatAutoCompleteTextView 
     }
 
     @Override
+    public void showSystemSoftKeyboard() {
+        delegate.showSystemSoftKeyboard();
+    }
+
+    @Override
     public boolean hideSoftKeyboard() {
         return delegate.hideSoftKeyboard();
+    }
+
+    @Override
+    public boolean showSoftKeyboard() {
+        return delegate.showSoftKeyboard();
     }
 
     @Override
@@ -141,4 +151,13 @@ public class SecurityAutoCompleteEditText extends AppCompatAutoCompleteTextView 
         return delegate.isHideEnable();
     }
 
+    @Override
+    public boolean isHide() {
+        return delegate.isHide();
+    }
+
+    @Override
+    public void switchSoftKeyboardWithSystem() {
+        delegate.switchSoftKeyboardWithSystem();
+    }
 }

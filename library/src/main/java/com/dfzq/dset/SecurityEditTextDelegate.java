@@ -28,6 +28,8 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
 
     private EditText editText;
 
+    private boolean isHide;
+
     public SecurityEditTextDelegate(EditText editText) {
         this.editText = editText;
     }
@@ -78,6 +80,24 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
     }
 
     @Override
+    public boolean isHide() {
+        return isHide;
+    }
+
+    @Override
+    public void switchSoftKeyboardWithSystem() {
+        if (isHideEnable()) {
+            if (isHide()) {
+                hideSystemSoftKeyboard();
+                showSoftKeyboard();
+            } else {
+                hideSoftKeyboard();
+                showSystemSoftKeyboard();
+            }
+        }
+    }
+
+    @Override
     public boolean getVoice() {
         return voice;
     }
@@ -99,13 +119,28 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
 
     @Override
     public void hideSystemSoftKeyboard() {
+        isHide = false;
         InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
     @Override
+    public void showSystemSoftKeyboard() {
+        isHide = true;
+        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, 1);
+    }
+
+    @Override
     public boolean hideSoftKeyboard() {
+        isHide = true;
         return KeyboardManager.getInstance().hideSoftInput(editText);
+    }
+
+    @Override
+    public boolean showSoftKeyboard() {
+        isHide = false;
+        return KeyboardManager.getInstance().showSoftInput(editText);
     }
 
     @Override
@@ -121,7 +156,8 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
     public void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         if (focused) {
             hideSystemSoftKeyboard();
-            KeyboardManager.getInstance().showSoftInput(editText);
+            showSoftKeyboard();
+//            KeyboardManager.getInstance().showSoftInput(editText);
         } else {
             hideSoftKeyboard();
         }

@@ -148,8 +148,31 @@ public class SecurityEditText extends AppCompatEditText implements SecurityEditT
         delegate.hideSystemSoftKeyboard();
     }
 
+    /**
+     * 弹出系统键盘
+     */
+    @Override
+    public void showSystemSoftKeyboard() {
+        delegate.showSystemSoftKeyboard();
+    }
+
     @Override
     public boolean hideSoftKeyboard() {
         return delegate.hideSoftKeyboard();
+    }
+
+    @Override
+    public boolean showSoftKeyboard() {
+        return delegate.showSoftKeyboard();
+    }
+
+    @Override
+    public boolean isHide() {
+        return delegate.isHide();
+    }
+
+    @Override
+    public void switchSoftKeyboardWithSystem() {
+        delegate.switchSoftKeyboardWithSystem();
     }
 }

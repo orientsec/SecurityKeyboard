@@ -60,17 +60,17 @@
             android:codes="-13"
             android:keyLabel="300"/>
         <Key
-            android:codes="-14"
-            android:keyLabel="00"/>
+            android:codes="-2"
+            android:keyLabel="ABC" />
         <Key
             android:codes="48"
             android:keyLabel="0"/>
         <Key
+            android:codes="-16"
+            android:keyLabel="@string/chinese" />
+        <Key
             android:codes="46"
             android:keyLabel="."/>
-        <Key
-            android:codes="-2"
-            android:keyLabel="abc"/>
     </Row>
 
 </Keyboard>

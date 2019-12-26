@@ -28,7 +28,11 @@ interface SecurityEditTextInterface {
 
     void hideSystemSoftKeyboard();
 
+    void showSystemSoftKeyboard();
+
     boolean hideSoftKeyboard();
+
+    boolean showSoftKeyboard();
 
     boolean performClick();
 
@@ -64,4 +68,8 @@ interface SecurityEditTextInterface {
      * @return true enable
      */
     boolean isHideEnable();
+
+    boolean isHide();
+
+    void switchSoftKeyboardWithSystem();
 }

@@ -61,6 +61,7 @@ public class StockNumKeyboardView extends SecretKeyboardView {
                 || KEY_LABEL_300.equals(label)
                 || KEY_LABEL_00.equals(label)
                 || KEY_LABEL_IF.equals(label)
+                || key.codes[0] == -16
                 || KEY_LABEL_DOTE.equals(label)) {
             bgRes = R.drawable.dset_keyboard_special_btn_bg;
         }

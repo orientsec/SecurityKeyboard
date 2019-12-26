@@ -49,7 +49,9 @@ public class LetterKeyboardView extends SecretKeyboardView {
             bgRes = R.drawable.dset_btn_keyboard_key_delete;
         }
         // CHANGE
-        else if (key.codes[0] == KEYCODE_MODE_CHANGE) {
+        else if (key.codes[0] == KEYCODE_MODE_CHANGE ||
+                key.codes[0] == -16 ||
+                key.codes[0] == 46) {
             bgRes = R.drawable.dset_keyboard_special_btn_bg;
         }
         // space
