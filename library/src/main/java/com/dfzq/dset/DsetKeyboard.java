@@ -95,7 +95,7 @@ class DsetKeyboard {
         LayoutInflater.from(context).inflate(R.layout.dset_keyboard_layout, parent);
         voiceLayout = parent.findViewById(R.id.voice_layout);
         View btnVoice = parent.findViewById(R.id.btn_voice);
-        dialog.findViewById(R.id.rl_switch_system_keyboard).setOnClickListener(new View.OnClickListener() {
+        parent.findViewById(R.id.rl_switch_system_keyboard).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editText != null && editText instanceof SecurityEditTextInterface) {
