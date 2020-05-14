@@ -66,8 +66,8 @@
             android:codes="48"
             android:keyLabel="0"/>
         <Key
-            android:codes="-16"
-            android:keyLabel="@string/chinese" />
+            android:codes="-17"
+            android:keyLabel="688" />
         <Key
             android:codes="46"
             android:keyLabel="."/>

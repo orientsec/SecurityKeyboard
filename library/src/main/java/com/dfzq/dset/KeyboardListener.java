@@ -42,6 +42,7 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
     private static final int KEYCODE_00 = -14;
     private static final int KEYCODE_IF = -15;
     private static final int KEYCODE_SWITCH_SYSTEM = -16;
+    private static final int KEYCODE_688 = -17;
 
     private SecretKeyboardView keyboardView;
     private DsetKeyboard dsetKeyboard;
@@ -88,7 +89,8 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
             case KEYCODE_300:
             case KEYCODE_00:
             case KEYCODE_IF:
-            case KEYCODE_002:// 解决多code 快速点击错误问题
+            case KEYCODE_002:
+            case KEYCODE_688:// 解决多code 快速点击错误问题
                 if (editable != null) {
                     editable.insert(start, getKeyLabel(primaryCode));
                 }
@@ -175,6 +177,8 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
                 return "IF";
             case KEYCODE_002:
                 return "002";
+            case KEYCODE_688:
+                return "688";
             default:
                 return "";
         }

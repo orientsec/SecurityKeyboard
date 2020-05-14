@@ -26,6 +26,7 @@ public class StockNumKeyboardView extends SecretKeyboardView {
     private static final String KEY_LABEL_300 = "300";
     private static final String KEY_LABEL_00 = "00";
     private static final String KEY_LABEL_IF = "IF";
+    private static final String KEY_LABEL_688 = "688";
     public static final String KEY_LABEL_DOTE = ".";
 
     public StockNumKeyboardView(Context context, AttributeSet attrs) {
@@ -61,6 +62,7 @@ public class StockNumKeyboardView extends SecretKeyboardView {
                 || KEY_LABEL_300.equals(label)
                 || KEY_LABEL_00.equals(label)
                 || KEY_LABEL_IF.equals(label)
+                || KEY_LABEL_688.equals(label)
                 || key.codes[0] == -16
                 || KEY_LABEL_DOTE.equals(label)) {
             bgRes = R.drawable.dset_keyboard_special_btn_bg;
