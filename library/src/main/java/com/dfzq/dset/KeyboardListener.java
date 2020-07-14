@@ -40,7 +40,7 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
     private static final int KEYCODE_002 = -12;
     private static final int KEYCODE_300 = -13;
     private static final int KEYCODE_00 = -14;
-    private static final int KEYCODE_IF = -15;
+    private static final int KEYCODE_000 = -15;
     private static final int KEYCODE_SWITCH_SYSTEM = -16;
     private static final int KEYCODE_688 = -17;
 
@@ -88,7 +88,7 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
             case KEYCODE_601:
             case KEYCODE_300:
             case KEYCODE_00:
-            case KEYCODE_IF:
+            case KEYCODE_000:
             case KEYCODE_002:
             case KEYCODE_688:// 解决多code 快速点击错误问题
                 if (editable != null) {
@@ -173,8 +173,8 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
                 return "300";
             case KEYCODE_00:
                 return "00";
-            case KEYCODE_IF:
-                return "IF";
+            case KEYCODE_000:
+                return "000";
             case KEYCODE_002:
                 return "002";
             case KEYCODE_688:

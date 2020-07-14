@@ -37,7 +37,7 @@
             android:keyLabel="6"/>
         <Key
             android:codes="-15"
-            android:keyLabel="IF"/>
+            android:keyLabel="000"/>
     </Row>
     <Row>
         <Key
