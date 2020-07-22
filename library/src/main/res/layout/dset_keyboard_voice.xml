@@ -12,15 +12,14 @@
         android:layout_width="0dp"
         android:layout_height="42dp"
         android:layout_weight="1"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/dset_keyboard_voice_btn_bg">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/arrow_left"
             android:drawableStart="@drawable/arrow_left"
             android:drawablePadding="3dp"
             android:layout_centerInParent="true"
@@ -33,10 +32,9 @@
     <LinearLayout
         android:id="@+id/btn_voice"
         android:layout_width="0dp"
-        android:layout_weight="3"
+        android:layout_weight="2.8"
         android:layout_height="42dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginEnd="7dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/dset_keyboard_voice_btn_bg"
         android:gravity="center"
@@ -52,7 +50,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="24dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:text="@string/voice_tips"
             android:textColor="@color/dset_text_black"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.dfzq.dset.view.NumOnlyKeyboardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.dfzq.dset.view.SecretKeyboardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/keyboard_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,6 +9,6 @@
     android:keyBackground="@drawable/dset_bg_keyboardview"
     android:keyPreviewOffset="1dp"
     android:keyTextColor="#333333"
-    android:paddingTop="0dp"
+    android:keyTextSize="24dp"
     android:shadowColor="#ffffff"
-    android:shadowRadius="0.0" />
+    android:shadowRadius="3.0" />

@@ -26,13 +26,11 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/ll_root"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_gravity="center_vertical"
@@ -68,7 +66,6 @@
                     android:textSize="16sp"/>
 
                 <ImageView
-                    android:id="@+id/clear_input"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|center"
@@ -83,7 +80,6 @@
                 android:layout_height="wrap_content">
 
                 <com.dfzq.dset.SecurityEditText
-                    android:id="@+id/voice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="语音识别"
@@ -126,6 +122,20 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.dfzq.dset.SecurityEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="身份证"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    app:inputType="id" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

@@ -28,8 +28,6 @@ public class VoiceLayout extends RelativeLayout {
     private AnimationSet[] mAnimationSet = new AnimationSet[SIZE];
     private ImageView image_bg;
     private ImageView[] images = new ImageView[SIZE];
-    private float imageViewWidth = 100;
-    private float imageViewHeigth = 100;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -68,23 +66,21 @@ public class VoiceLayout extends RelativeLayout {
     }
 
     private void setLayout(Context context) {
-        LayoutParams params = new LayoutParams(dip2px(context, imageViewWidth), dip2px(context, imageViewHeigth));
+        float imageViewWidth = 100;
+        float imageViewHeight = 100;
+        LayoutParams params = new LayoutParams(dip2px(context, imageViewWidth), dip2px(context, imageViewHeight));
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         for (int i = 0; i < SIZE; i++) {
             images[i] = new ImageView(context);
             images[i].setImageResource(R.drawable.dset_keyboard_voice_circle);
             addView(images[i], params);
         }
-        LayoutParams params_bg = new LayoutParams(dip2px(context, imageViewWidth) - 70, dip2px(context, imageViewHeigth) - 70);
-//        //添加一个规则
+        LayoutParams params_bg = new LayoutParams(dip2px(context, imageViewWidth) - 70, dip2px(context, imageViewHeight) - 70);
+        //添加一个规则
         params_bg.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         image_bg = new ImageView(context);
         image_bg.setImageResource(R.drawable.dset_keyboard_voice_animation);
         addView(image_bg, params_bg);
-//        /**添加背景图片*/
-//        img_bg=new ImageView(context);
-//        img_bg.setImageResource(R.mipmap.point_org);
-//        addView(img_bg,params_bg);
     }
 
     private static int dip2px(Context context, float dipValue) {
@@ -114,8 +110,8 @@ public class VoiceLayout extends RelativeLayout {
     }
 
     public void stopWaveAnimation() {
-        for (int i = 0; i < images.length; i++) {
-            images[i].clearAnimation();
+        for (ImageView image : images) {
+            image.clearAnimation();
         }
     }
 

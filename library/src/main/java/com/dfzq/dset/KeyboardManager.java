@@ -26,6 +26,7 @@ import java.util.WeakHashMap;
  */
 
 public class KeyboardManager {
+    // 是否随机
     public static boolean needRandom = false;
     private static KeyboardManager keyboardManager;
     public static int logo = R.drawable.dset_keyboard_special_btn_bg;
@@ -81,10 +82,7 @@ public class KeyboardManager {
         if (!(editText instanceof SecurityEditTextInterface)) {
             return false;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            return editText.isAttachedToWindow();
-        }
-        return editText.isFocused();
+        return editText.isAttachedToWindow();
     }
 
     public void showVoiceLineView(EditText editText, boolean flag) {

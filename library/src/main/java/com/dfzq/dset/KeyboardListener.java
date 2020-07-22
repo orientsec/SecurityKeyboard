@@ -4,14 +4,7 @@ import android.inputmethodservice.KeyboardView;
 import android.text.Editable;
 import android.widget.EditText;
 
-import com.dfzq.dset.view.LetterKeyboardView;
-import com.dfzq.dset.view.NumKeyboardView;
-import com.dfzq.dset.view.NumOnlyKeyboardView;
 import com.dfzq.dset.view.SecretKeyboardView;
-import com.dfzq.dset.view.StockLetterKeyboardView;
-import com.dfzq.dset.view.StockNumKeyboardView;
-
-import java.util.List;
 
 import static android.inputmethodservice.Keyboard.KEYCODE_ALT;
 import static android.inputmethodservice.Keyboard.KEYCODE_DELETE;
@@ -19,6 +12,7 @@ import static android.inputmethodservice.Keyboard.KEYCODE_DONE;
 import static android.inputmethodservice.Keyboard.KEYCODE_MODE_CHANGE;
 import static android.inputmethodservice.Keyboard.KEYCODE_SHIFT;
 import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_NUM;
+import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_NUM_ONLY;
 import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_STOCK_LETTER;
 import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_STOCK_NUM;
 import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_TYPICAL;
@@ -34,12 +28,10 @@ import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_TYPICAL;
 
 class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
     public static final int SPACE = 32;         // 空格键
-    public static final int BLANK = -8;         // 空格键
     private static final int KEYCODE_600 = -10;
     private static final int KEYCODE_601 = -11;
     private static final int KEYCODE_002 = -12;
     private static final int KEYCODE_300 = -13;
-    private static final int KEYCODE_00 = -14;
     private static final int KEYCODE_000 = -15;
     private static final int KEYCODE_SWITCH_SYSTEM = -16;
     private static final int KEYCODE_688 = -17;
@@ -76,10 +68,10 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
         SecurityEditTextInterface securityEditTextInterface = (SecurityEditTextInterface) editText;
         Editable editable = editText.getText();
         int start = editText.getSelectionStart();
+        int type = securityEditTextInterface.getType();
 
         switch (primaryCode) {
             case SPACE:
-            case BLANK:
                 break;
             case KEYCODE_SWITCH_SYSTEM:
                 ((SecurityEditTextInterface) editText).switchSoftKeyboardWithSystem();
@@ -87,7 +79,6 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
             case KEYCODE_600:
             case KEYCODE_601:
             case KEYCODE_300:
-            case KEYCODE_00:
             case KEYCODE_000:
             case KEYCODE_002:
             case KEYCODE_688:// 解决多code 快速点击错误问题
@@ -111,30 +102,19 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
             }
             break;
             case KEYCODE_SHIFT: {
-                if (keyboardView instanceof LetterKeyboardView) {
-                    LetterKeyboardView letterKeyboardView = (LetterKeyboardView) keyboardView;
-                    boolean upperCase = letterKeyboardView.isUpperCase();
-                    changeKey(upperCase, letterKeyboardView.getKeyboard().getKeys());
-                    letterKeyboardView.setUpperCase(!upperCase);
-                    if (keyboardView instanceof StockLetterKeyboardView) {
-                        securityEditTextInterface.setType(KEYBOARD_STOCK_LETTER);
-                    } else {
-                        securityEditTextInterface.setType(KEYBOARD_TYPICAL);
-                    }
-                    KeyboardManager.getInstance().showSoftInput(editText);
-                }
+                keyboardView.changeShift();
             }
             break;
 
             case KEYCODE_MODE_CHANGE: {
-                if (keyboardView instanceof StockLetterKeyboardView) {
+                if (type == KEYBOARD_STOCK_LETTER) {
                     securityEditTextInterface.setType(KEYBOARD_STOCK_NUM);
-                } else if (keyboardView instanceof StockNumKeyboardView) {
+                } else if (type == KEYBOARD_STOCK_NUM) {
                     securityEditTextInterface.setType(KEYBOARD_STOCK_LETTER);
-                } else if (keyboardView instanceof LetterKeyboardView) {
-                    securityEditTextInterface.setType(KEYBOARD_NUM);
-                } else if (keyboardView instanceof NumKeyboardView) {
+                } else if (type == KEYBOARD_NUM) {
                     securityEditTextInterface.setType(KEYBOARD_TYPICAL);
+                } else {
+                    securityEditTextInterface.setType(KEYBOARD_NUM);
                 }
                 KeyboardManager.getInstance().showSoftInput(editText);
             }
@@ -142,7 +122,7 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
             default:
                 if (editable != null) {
                     StringBuilder str = new StringBuilder();
-                    boolean confuse = keyboardManager.isConfuse() && confusable();
+                    boolean confuse = keyboardManager.isConfuse() && confusable(type);
                     for (int pChar : keyCodes) {
                         if (pChar == -1) {
                             break;
@@ -159,8 +139,10 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
         }
     }
 
-    private boolean confusable() {
-        return keyboardView instanceof NumKeyboardView || keyboardView instanceof NumOnlyKeyboardView || keyboardView instanceof LetterKeyboardView;
+    private boolean confusable(int type) {
+        return type == KEYBOARD_NUM ||
+                type == KEYBOARD_NUM_ONLY ||
+                type == KEYBOARD_TYPICAL;
     }
 
     private CharSequence getKeyLabel(int keyCode) {
@@ -171,8 +153,6 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
                 return "601";
             case KEYCODE_300:
                 return "300";
-            case KEYCODE_00:
-                return "00";
             case KEYCODE_000:
                 return "000";
             case KEYCODE_002:
@@ -207,31 +187,5 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
     @Override
     public void swipeUp() {
 
-    }
-
-    /**
-     * 键盘大小写切换
-     */
-    private void changeKey(boolean isUpper, List<android.inputmethodservice.Keyboard.Key> keyList) {
-        if (isUpper) {// 大写切小写
-            for (android.inputmethodservice.Keyboard.Key key : keyList) {
-                if (key.label != null && isWord(key.label.toString())) {
-                    key.label = key.label.toString().toLowerCase();
-                    key.codes[0] = key.codes[0] + 32;
-                }
-            }
-        } else {// 小写切大写
-            for (android.inputmethodservice.Keyboard.Key key : keyList) {
-                if (key.label != null && isWord(key.label.toString())) {
-                    key.label = key.label.toString().toUpperCase();
-                    key.codes[0] = key.codes[0] - 32;
-                }
-            }
-        }
-    }
-
-    private boolean isWord(String str) {
-        String wordStr = "abcdefghijklmnopqrstuvwxyz";
-        return wordStr.contains(str.toLowerCase());
     }
 }

@@ -10,13 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.dfzq.dset.view.IDKeyboardView;
-import com.dfzq.dset.view.LetterKeyboardView;
-import com.dfzq.dset.view.NumKeyboardView;
-import com.dfzq.dset.view.NumOnlyKeyboardView;
+import androidx.annotation.NonNull;
+
 import com.dfzq.dset.view.SecretKeyboardView;
-import com.dfzq.dset.view.StockLetterKeyboardView;
-import com.dfzq.dset.view.StockNumKeyboardView;
 import com.dfzq.dset.view.VoiceLayout;
 
 import java.util.Arrays;
@@ -27,20 +23,12 @@ import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_NUM;
 import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_NUM_ONLY;
 import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_STOCK_LETTER;
 import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_STOCK_NUM;
-import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_TYPICAL;
 
 /**
  * Created by meihu on 2017/3/17.
  */
 
 class DsetKeyboard {
-    // 是否随机
-    private IDKeyboardView idKeyboardView;
-    private LetterKeyboardView letterKeyboardView;
-    private NumOnlyKeyboardView numOnlyKeyboardView;
-    private NumKeyboardView numKeyboardView;
-    private StockNumKeyboardView stockNumKeyboardView;
-    private StockLetterKeyboardView stockLetterKeyboardView;
     private SecretKeyboardView keyboardView;
     private View voiceLayout;
     private VoiceLayout voiceView;
@@ -51,7 +39,8 @@ class DsetKeyboard {
     private VoiceRecognizer recognizer;
     private Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
             try {
                 switch (msg.what) {
                     case 1:
@@ -64,7 +53,6 @@ class DsetKeyboard {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     };
 
@@ -167,102 +155,52 @@ class DsetKeyboard {
     }
 
     private void setKeyboardView(int type) {
+        EditText editText = getFocus();
+        if (!(editText instanceof SecurityEditTextInterface)) {
+            return;
+        }
+
+        if (keyboardView == null) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            keyboardView = (SecretKeyboardView) inflater.inflate(R.layout.dset_keyboard, frameLayout, false);
+            keyboardView.setOnKeyboardActionListener(new KeyboardListener(keyboardView, this));
+            frameLayout.addView(keyboardView);
+            keyboardView.setPreviewEnabled(false);
+        }
+        keyboardView.setHideEnable(((SecurityEditTextInterface) editText).isHideEnable());
+
+        android.inputmethodservice.Keyboard keyboard;
         switch (type) {
-            case KEYBOARD_NUM:
-                if (numKeyboardView != null && keyboardView == numKeyboardView) {
-                    return;
-                } else {
-                    keyboardView = numKeyboardView;
-                }
-                break;
             case KEYBOARD_ID:
-                if (idKeyboardView != null && keyboardView == idKeyboardView) {
-                    return;
-                } else {
-                    keyboardView = idKeyboardView;
+                keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_id);
+                break;
+            case KEYBOARD_NUM:
+                keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_num);
+                if (KeyboardManager.needRandom) {
+                    randomNumKey(keyboard.getKeys());
                 }
                 break;
             case KEYBOARD_NUM_ONLY:
-                if (numOnlyKeyboardView != null && keyboardView == numOnlyKeyboardView) {
-                    return;
-                } else {
-                    keyboardView = numOnlyKeyboardView;
+                keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_num_only);
+                if (KeyboardManager.needRandom) {
+                    randomNumOnlyKey(keyboard.getKeys());
                 }
                 break;
             case KEYBOARD_STOCK_NUM:
-                if (stockNumKeyboardView != null && keyboardView == stockNumKeyboardView) {
-                    return;
-                } else {
-                    keyboardView = stockNumKeyboardView;
-                }
+                keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_stock_number);
                 break;
             case KEYBOARD_STOCK_LETTER:
-                keyboardView = stockLetterKeyboardView;
+                keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_stock_letter);
                 break;
-            case KEYBOARD_TYPICAL:
-                keyboardView = letterKeyboardView;
+            default:
+                keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_abc);
+                if (KeyboardManager.needRandom) {
+                    randomTypicalKey(keyboard.getKeys());
+                }
                 break;
         }
-        frameLayout.removeAllViews();
-//        if (frameLayout.getChildCount() > 1) {
-//            frameLayout.removeAllViews();
-//        }
-        LayoutInflater inflater = LayoutInflater.from(context);
-        if (keyboardView == null) {
-            android.inputmethodservice.Keyboard keyboard;
-            switch (type) {
-                case KEYBOARD_ID:
-                    idKeyboardView = (IDKeyboardView) inflater.inflate(R.layout.dset_keyboard_id, frameLayout, false);
-                    keyboardView = idKeyboardView;
-                    keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_id);
-                    break;
-                case KEYBOARD_NUM:
-                    numKeyboardView = (NumKeyboardView) inflater.inflate(R.layout.dset_keyboard_num, frameLayout, false);
-                    keyboardView = numKeyboardView;
-                    keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_num);
-                    if (KeyboardManager.needRandom) {
-                        randomNumKey(keyboard.getKeys());
-                    }
-                    break;
-                case KEYBOARD_NUM_ONLY:
-                    numOnlyKeyboardView = (NumOnlyKeyboardView) inflater.inflate(R.layout.dset_keyboard_num_only, frameLayout, false);
-                    keyboardView = numOnlyKeyboardView;
-                    keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_num_only);
-                    if (KeyboardManager.needRandom) {
-                        randomNumOnlyKey(keyboard.getKeys());
-                    }
-                    break;
-                case KEYBOARD_STOCK_NUM:
-                    stockNumKeyboardView = (StockNumKeyboardView) inflater.inflate(R.layout.dset_keyboard_stock_num, frameLayout, false);
-                    keyboardView = stockNumKeyboardView;
-                    keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_stock_number);
-                    break;
-                case KEYBOARD_STOCK_LETTER:
-                    stockLetterKeyboardView = (StockLetterKeyboardView) inflater.inflate(R.layout.dset_keyboard_stock_letter, frameLayout, false);
-                    keyboardView = stockLetterKeyboardView;
-                    keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_stock_letter);
-                    break;
-                case KEYBOARD_TYPICAL:
-                default:
-                    letterKeyboardView = (LetterKeyboardView) inflater.inflate(R.layout.dset_keyboard_letter, frameLayout, false);
-                    keyboardView = letterKeyboardView;
-                    keyboard = new android.inputmethodservice.Keyboard(context, R.xml.dset_keyboard_abc);
-                    if (KeyboardManager.needRandom) {
-                        randomTypicalKey(keyboard.getKeys());
-                    }
-                    break;
-            }
-            EditText editText = getFocus();
-            if (editText instanceof SecurityEditTextInterface) {
-                keyboardView.setHideEnable(((SecurityEditTextInterface) editText).isHideEnable());
-            }
-            keyboardView.setKeyboard(keyboard);
-            keyboardView.setOnKeyboardActionListener(new KeyboardListener(keyboardView, this));
-        }
-        frameLayout.addView(keyboardView);
-        keyboardView.setPreviewEnabled(false);
+        keyboardView.setKeyboard(keyboard);
     }
-
 
     /**
      * 随机数字键盘
