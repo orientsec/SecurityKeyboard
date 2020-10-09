@@ -3,4 +3,5 @@
     <color name="dset_view_bolder">#e5e5e5</color>
     <color name="dset_white">#e5e5e5</color>
     <color name="dset_text_black">#1F1F1F</color>
+    <color name="dset_text_gray">#7F7F7F</color>
 </resources>

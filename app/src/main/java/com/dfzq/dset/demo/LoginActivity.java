@@ -94,6 +94,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return new BaiduRecognizer(LoginActivity.this);
             }
         });
+        KeyboardManager.assetsFolder = "voice/";
+        KeyboardManager.animationName = "voice/data.json";
         // Set up the login form.
         mEmailView = findViewById(R.id.email);
         populateAutoComplete();

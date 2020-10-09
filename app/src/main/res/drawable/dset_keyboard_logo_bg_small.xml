@@ -4,7 +4,7 @@
     <item android:drawable="@drawable/dset_keyboard_btn_normal" />
     <item
         android:bottom="10dp"
-        android:drawable="@drawable/dset_keyboard_logo"
+        android:drawable="@drawable/logo"
         android:left="5dp"
         android:right="5dp"
         android:top="10dp" />

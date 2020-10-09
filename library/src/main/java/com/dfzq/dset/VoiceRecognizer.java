@@ -1,15 +1,19 @@
 package com.dfzq.dset;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.dfzq.dset.provider.DefaultRecognizer;
 import com.dfzq.dset.provider.Recognizer;
 import com.dfzq.dset.provider.RecognizerListener;
-import com.dfzq.dset.view.VoiceLayout;
 
 /**
  * Created by djy on 2018/1/4.
@@ -18,16 +22,18 @@ import com.dfzq.dset.view.VoiceLayout;
 public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener {
 
     private EditText editText;
-    private VoiceLayout lineView;
     private ImageView voiceImg;
     private String preText = "";
     private boolean stopFlag;
     private Recognizer recognizer;
+    private TextView tvTitle;
+    private LinearLayout voiceBg;
 
-    public VoiceRecognizer(View voiceLayout, VoiceLayout lineView) {
-        this.lineView = lineView;
+    public VoiceRecognizer(View voiceLayout) {
         if (voiceLayout != null) {
             voiceImg = voiceLayout.findViewById(R.id.iv_voice);
+            tvTitle = voiceLayout.findViewById(R.id.tv_title);
+            voiceBg = voiceLayout.findViewById(R.id.btn_voice);
             voiceLayout.setOnTouchListener(this);
         }
         recognizer = getRecognizer();
@@ -48,6 +54,7 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
 
     public void cancel() {
         recognizer.cancel();
+        stopSpeech();
     }
 
     private void startVoice() {
@@ -61,6 +68,7 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
         recognizer.stopVoice();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         int action = motionEvent.getAction();
@@ -68,10 +76,14 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
             case MotionEvent.ACTION_DOWN:
                 startVoice();
                 if (voiceImg != null) {
-                    voiceImg.setBackgroundResource(R.drawable.dset_keyboard_voice_speech_on);
+                    voiceImg.setBackgroundResource(R.drawable.dset_keyboard_voice_speech_on_white);
                 }
-                if (lineView != null) {
-                    lineView.startWaveAnimation();
+                if (tvTitle != null) {
+                    tvTitle.setText(R.string.voice_release_tips);
+                    tvTitle.setTextColor(ContextCompat.getColor(view.getContext(), R.color.dset_white));
+                }
+                if (voiceBg != null) {
+                    voiceBg.setBackgroundResource(R.drawable.corner_gray_bg);
                 }
                 if (editText != null) {
                     ((SecurityEditTextInterface) editText).onVoiceStateChanged(1);
@@ -80,21 +92,35 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
                 KeyboardManager.getInstance().showVoiceLineView(editText, true);
                 break;
             case MotionEvent.ACTION_UP:
-                if (voiceImg != null) {
-                    voiceImg.setBackgroundResource(R.drawable.dset_keyboard_voice_speech_off);
+                stopSpeech();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (motionEvent.getY() < -ViewUtils.dpToPx(view.getContext(), 100)) {
+                    stopSpeech();
                 }
-                if (lineView != null) {
-                    lineView.stopWaveAnimation();
-                }
-                if (editText != null) {
-                    ((SecurityEditTextInterface) editText).onVoiceStateChanged(0);
-                }
-                stopFlag = false;
-                KeyboardManager.getInstance().showVoiceLineView(editText, false);
-                stopVoice();
                 break;
         }
         return true;
+    }
+
+
+    private void stopSpeech() {
+        if (tvTitle != null) {
+            tvTitle.setText(R.string.voice_tips);
+            tvTitle.setTextColor(ContextCompat.getColor(tvTitle.getContext(), R.color.dset_text_black));
+        }
+        if (voiceImg != null) {
+            voiceImg.setBackgroundResource(R.drawable.dset_keyboard_voice_speech_off_gray);
+        }
+        if (editText != null) {
+            ((SecurityEditTextInterface) editText).onVoiceStateChanged(0);
+        }
+        if (voiceBg != null) {
+            voiceBg.setBackgroundResource(R.drawable.corner_white_bg);
+        }
+        stopFlag = false;
+        KeyboardManager.getInstance().showVoiceLineView(editText, false);
+        stopVoice();
     }
 
     @Override
@@ -113,9 +139,6 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
 
     @Override
     public void onVolumeChange(int volume) {
-        if (lineView != null) {
-            lineView.setLevel(volume + 14);
-        }
     }
 
     @Override
@@ -129,10 +152,7 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
     public void onNoPermission() {
         stopFlag = false;
         if (voiceImg != null) {
-            voiceImg.setBackgroundResource(R.drawable.dset_keyboard_voice_speech_on);
-        }
-        if (lineView != null) {
-            lineView.stopWaveAnimation();
+            voiceImg.setBackgroundResource(R.drawable.dset_keyboard_voice_speech_on_white);
         }
         KeyboardManager.getInstance().showVoiceLineView(editText, true);
     }

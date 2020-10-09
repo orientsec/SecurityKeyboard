@@ -30,6 +30,8 @@ public class KeyboardManager {
     public static boolean needRandom = false;
     private static KeyboardManager keyboardManager;
     public static int logo = R.drawable.dset_keyboard_special_btn_bg;
+    public static String assetsFolder = "";
+    public static String animationName = "";
     private WeakReference<DsetKeyboard> keyboardWeakReference;
     private boolean confuse;
     private SparseIntArray keys = new SparseIntArray();

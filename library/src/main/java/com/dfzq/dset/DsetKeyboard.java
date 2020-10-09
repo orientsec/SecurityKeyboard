@@ -5,15 +5,19 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.dfzq.dset.view.SecretKeyboardView;
-import com.dfzq.dset.view.VoiceLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,12 +35,13 @@ import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_STOCK_NUM;
 class DsetKeyboard {
     private SecretKeyboardView keyboardView;
     private View voiceLayout;
-    private VoiceLayout voiceView;
     private ViewGroup frameLayout;
     private Dialog dialog;
     private EditText editText;
     private Context context;
     private VoiceRecognizer recognizer;
+    private PopupWindow popupWindow;
+    private LottieAnimationView animationView;
     private Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -73,9 +78,8 @@ class DsetKeyboard {
                 }
             }
         });
-        voiceView = dialog.findViewById(R.id.voice_view);
         frameLayout = dialog.findViewById(R.id.keyboard_view);
-        recognizer = new VoiceRecognizer(btnVoice, voiceView);
+        recognizer = new VoiceRecognizer(btnVoice);
     }
 
     DsetKeyboard(ViewGroup parent) {
@@ -91,9 +95,8 @@ class DsetKeyboard {
                 }
             }
         });
-        voiceView = parent.findViewById(R.id.voice_view);
         frameLayout = parent.findViewById(R.id.keyboard_view);
-        recognizer = new VoiceRecognizer(btnVoice, voiceView);
+        recognizer = new VoiceRecognizer(btnVoice);
     }
 
     void hideKeyboardImme() {
@@ -128,11 +131,36 @@ class DsetKeyboard {
 
     void showVoiceView(boolean flag) {
         if (flag) {
-            keyboardView.setVisibility(View.INVISIBLE);
-            voiceView.setVisibility(View.VISIBLE);
+            showAnimation();
         } else {
-            keyboardView.setVisibility(View.VISIBLE);
-            voiceView.setVisibility(View.INVISIBLE);
+            hideAnimation();
+        }
+    }
+
+    private void showAnimation() {
+        hideAnimation();
+        popupWindow = new PopupWindow(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        View view = LayoutInflater.from(context).inflate(R.layout.dset_keyboard_animattion, new FrameLayout(context), false);
+        popupWindow.setContentView(view);
+        int navHeight = ViewUtils.getNavigationBarHeightIfRoom(editText.getContext());
+        int height = keyboardView.getHeight() + voiceLayout.getHeight() + ViewUtils.dpToPx(context, 12) + navHeight;
+        popupWindow.showAtLocation(editText, Gravity.BOTTOM, 0, height);
+
+        animationView = view.findViewById(R.id.animation_view);
+        if (!TextUtils.isEmpty(KeyboardManager.assetsFolder) && !TextUtils.isEmpty(KeyboardManager.animationName)) {
+            animationView.setImageAssetsFolder(KeyboardManager.assetsFolder);
+            animationView.setAnimation(KeyboardManager.animationName);
+            animationView.playAnimation();
+        }
+    }
+
+    private void hideAnimation() {
+        if (animationView != null) {
+            animationView.cancelAnimation();
+        }
+        if (popupWindow != null) {
+            popupWindow.dismiss();
+            popupWindow = null;
         }
     }
 
@@ -141,7 +169,6 @@ class DsetKeyboard {
         if (recognizer != null) {
             recognizer.setEditText(editText);
         }
-        voiceView.setVisibility(View.INVISIBLE);
         if (voice) {
             voiceLayout.setVisibility(View.VISIBLE);
         } else {
