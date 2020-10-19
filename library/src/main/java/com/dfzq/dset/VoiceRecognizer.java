@@ -27,15 +27,17 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
     private boolean stopFlag;
     private Recognizer recognizer;
     private TextView tvTitle;
+    private TextView changeTv;
     private LinearLayout voiceBg;
 
-    public VoiceRecognizer(View voiceLayout) {
+    public VoiceRecognizer(View voiceLayout, TextView changeTv) {
         if (voiceLayout != null) {
             voiceImg = voiceLayout.findViewById(R.id.iv_voice);
             tvTitle = voiceLayout.findViewById(R.id.tv_title);
             voiceBg = voiceLayout.findViewById(R.id.btn_voice);
             voiceLayout.setOnTouchListener(this);
         }
+        this.changeTv = changeTv;
         recognizer = getRecognizer();
         recognizer.setRecognizerListener(this);
     }
@@ -88,6 +90,9 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
                 if (editText != null) {
                     ((SecurityEditTextInterface) editText).onVoiceStateChanged(1);
                 }
+                if (changeTv != null) {
+                    changeTv.setVisibility(View.GONE);
+                }
                 stopFlag = true;
                 KeyboardManager.getInstance().showVoiceLineView(editText, true);
                 break;
@@ -117,6 +122,9 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
         }
         if (voiceBg != null) {
             voiceBg.setBackgroundResource(R.drawable.corner_white_bg);
+        }
+        if (changeTv != null) {
+            changeTv.setVisibility(View.VISIBLE);
         }
         stopFlag = false;
         KeyboardManager.getInstance().showVoiceLineView(editText, false);

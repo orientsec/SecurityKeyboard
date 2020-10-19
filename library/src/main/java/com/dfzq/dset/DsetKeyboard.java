@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -78,8 +79,9 @@ class DsetKeyboard {
                 }
             }
         });
+        TextView changeTv = dialog.findViewById(R.id.rl_switch_system_keyboard);
         frameLayout = dialog.findViewById(R.id.keyboard_view);
-        recognizer = new VoiceRecognizer(btnVoice);
+        recognizer = new VoiceRecognizer(btnVoice, changeTv);
     }
 
     DsetKeyboard(ViewGroup parent) {
@@ -95,8 +97,9 @@ class DsetKeyboard {
                 }
             }
         });
+        TextView changeTv = dialog.findViewById(R.id.rl_switch_system_keyboard);
         frameLayout = parent.findViewById(R.id.keyboard_view);
-        recognizer = new VoiceRecognizer(btnVoice);
+        recognizer = new VoiceRecognizer(btnVoice, changeTv);
     }
 
     void hideKeyboardImme() {
