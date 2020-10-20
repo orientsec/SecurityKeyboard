@@ -97,7 +97,7 @@ class DsetKeyboard {
                 }
             }
         });
-        TextView changeTv = dialog.findViewById(R.id.rl_switch_system_keyboard);
+        TextView changeTv = parent.findViewById(R.id.rl_switch_system_keyboard);
         frameLayout = parent.findViewById(R.id.keyboard_view);
         recognizer = new VoiceRecognizer(btnVoice, changeTv);
     }
