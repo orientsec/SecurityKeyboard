@@ -8,6 +8,11 @@
     android:baselineAligned="false"
     android:orientation="horizontal">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#c9c9c9" />
+
     <TextView
         android:id="@+id/rl_switch_system_keyboard"
         android:layout_width="wrap_content"
