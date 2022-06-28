@@ -1,21 +1,24 @@
 package com.dfzq.dset;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.os.Build;
 import android.os.Looper;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import com.dfzq.dset.provider.Recognizer;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.WeakHashMap;
+
+import javax.inject.Provider;
 
 /**
  * ProductName:DsetKeyboard
@@ -28,26 +31,22 @@ import java.util.WeakHashMap;
 public class KeyboardManager {
     // 是否随机
     public static boolean needRandom = false;
-    private static KeyboardManager keyboardManager;
     public static int logo = R.drawable.dset_keyboard_special_btn_bg;
     public static String assetsFolder = "";
     public static String animationName = "";
     private WeakReference<DsetKeyboard> keyboardWeakReference;
     private boolean confuse;
     private SparseIntArray keys = new SparseIntArray();
-    private Map<View, DsetKeyboard> viewKeyboardMap = new WeakHashMap<>();
-    private Map<Context, DsetKeyboard> dialogKeyboardMap = new WeakHashMap<>();
+    private final Map<View, DsetKeyboard> viewKeyboardMap = new WeakHashMap<>();
+    private final Map<Activity, DsetKeyboard> dialogKeyboardMap = new WeakHashMap<>();
     private Provider<Recognizer> provider;
 
+    private static final class KeyboardManagerHolder {
+        static final KeyboardManager keyboardManager = new KeyboardManager();
+    }
+
     public static KeyboardManager getInstance() {
-        if (keyboardManager == null) {
-            synchronized (KeyboardManager.class) {
-                if (keyboardManager == null) {
-                    keyboardManager = new KeyboardManager();
-                }
-            }
-        }
-        return keyboardManager;
+        return KeyboardManagerHolder.keyboardManager;
     }
 
     public Provider<Recognizer> getProvider() {
@@ -157,7 +156,7 @@ public class KeyboardManager {
                 viewKeyboardMap.put(parent, keyboard);
             }
         } else {
-            Activity activity = getActivity(editText.getContext());
+            FragmentActivity activity = getActivity(editText.getContext());
             if (activity == null) {
                 return null;
             }
@@ -165,20 +164,20 @@ public class KeyboardManager {
             if (dialogKeyboardMap.get(activity) == null && autoBuild) {
                 keyboard = new DsetKeyboard(activity);
                 dialogKeyboardMap.put(activity, keyboard);
-                activity.getFragmentManager()
+                activity.getSupportFragmentManager()
                         .beginTransaction()
-                        .add(new MonitorFragment(), "DsetMonitorFragment")
+                        .add(new MonitorFragment(), "Orientsec-keyboard-holder")
                         .commitAllowingStateLoss();
             }
         }
         return keyboard;
     }
 
-    private Activity getActivity(Context context) {
+    private FragmentActivity getActivity(Context context) {
         Context baseContext = context;
         while (baseContext instanceof ContextWrapper) {
-            if (baseContext instanceof Activity) {
-                return (Activity) baseContext;
+            if (baseContext instanceof FragmentActivity) {
+                return (FragmentActivity) baseContext;
             }
             baseContext = ((ContextWrapper) baseContext).getBaseContext();
         }
@@ -189,7 +188,9 @@ public class KeyboardManager {
         @Override
         public void onDestroy() {
             super.onDestroy();
-            DsetKeyboard keyboard = KeyboardManager.getInstance().dialogKeyboardMap.get(getActivity());
+            Activity activity;
+            if ((activity = getActivity()) == null) return;
+            DsetKeyboard keyboard = KeyboardManager.getInstance().dialogKeyboardMap.remove(activity);
             if (keyboard != null) {
                 keyboard.hideKeyboardImme();
             }

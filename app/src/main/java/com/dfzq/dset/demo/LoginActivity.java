@@ -1,9 +1,10 @@
 package com.dfzq.dset.demo;
 
+import static android.Manifest.permission.READ_CONTACTS;
+
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -16,10 +17,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
@@ -28,24 +27,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
-import android.widget.TextView;
-
-import com.dfzq.dset.KeyboardManager;
-import com.dfzq.dset.Provider;
-import com.dfzq.dset.SecurityEditText;
-import com.dfzq.dset.VoiceInputStateChangeListener;
-import com.dfzq.dset.provider.Recognizer;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import static android.Manifest.permission.READ_CONTACTS;
+import com.dfzq.dset.KeyboardManager;
+import com.dfzq.dset.SecurityEditText;
+import com.dfzq.dset.VoiceInputStateChangeListener;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A login screen that offers login via email/password.
@@ -87,13 +82,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         KeyboardManager.logo = R.drawable.dset_keyboard_logo_bg_small;
-        KeyboardManager.getInstance().setProvider(new Provider<Recognizer>() {
-            @NonNull
-            @Override
-            public Recognizer get() {
-                return new BaiduRecognizer(LoginActivity.this);
-            }
-        });
+        KeyboardManager.getInstance().setProvider(() -> new BaiduRecognizer(LoginActivity.this));
         KeyboardManager.assetsFolder = "voice/";
         KeyboardManager.animationName = "voice/data.json";
         // Set up the login form.
@@ -102,24 +91,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         initVoice();
         //voiceEditText = findViewById(R.id.voice);
         mPasswordView = findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+        mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
+            if (id == EditorInfo.IME_NULL) {
+                attemptLogin();
+                return true;
             }
+            return false;
         });
 
         Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+        mEmailSignInButton.setOnClickListener(view -> attemptLogin());
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -144,11 +125,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             @Override
             public void onErrorState(int error) {
-                if (3001 == error) {
-                    voiceShow(false);
-                } else {
-                    voiceShow(true);
-                }
+                voiceShow(3001 != error);
             }
         });
 
@@ -163,11 +140,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 voiceShow(true);
             }
         } else {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                voiceShow(false);
-            } else {
-                voiceShow(true);
-            }
+            voiceShow(ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED);
         }
     }
 
@@ -200,13 +173,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
+                    .setAction(android.R.string.ok, v -> requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS))
+                    .show();
+
         } else {
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
         }
@@ -224,14 +193,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 populateAutoComplete();
             }
         } else if (requestCode == REQUEST_RECORD_AUDIO) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                voiceShow(true);
-            } else {
-                voiceShow(false);
-            }
+            voiceShow(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED);
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mAuthTask != null) {
+            mAuthTask.clean();
+        }
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -280,7 +252,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, this);
             mAuthTask.execute((Void) null);
         }
     }
@@ -298,7 +270,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
@@ -378,18 +349,42 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //int IS_PRIMARY = 1;
     }
 
+    private void onExecuted(boolean success) {
+        mAuthTask = null;
+        showProgress(false);
+
+        if (success) {
+            finish();
+        } else {
+            mPasswordView.setError(getString(R.string.error_incorrect_password));
+            mPasswordView.requestFocus();
+        }
+    }
+
+    private void onCanceled() {
+        mAuthTask = null;
+        showProgress(false);
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    static class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+        private WeakReference<LoginActivity> loginActivity;
 
         private final String mEmail;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email, String password, LoginActivity loginActivity) {
+            super();
             mEmail = email;
             mPassword = password;
+            this.loginActivity = new WeakReference<>(loginActivity);
+        }
+
+        void clean() {
+            loginActivity = null;
         }
 
         @Override
@@ -417,21 +412,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+            LoginActivity activity;
+            if (loginActivity != null && (activity = loginActivity.get()) != null) {
+                activity.onExecuted(success);
             }
         }
 
         @Override
         protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
+            LoginActivity activity;
+            if (loginActivity != null && (activity = loginActivity.get()) != null) {
+                activity.onCanceled();
+            }
         }
     }
 }

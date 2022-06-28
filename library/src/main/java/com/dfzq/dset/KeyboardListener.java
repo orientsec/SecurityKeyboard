@@ -37,7 +37,7 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
     private static final int KEYCODE_688 = -17;
 
     private SecretKeyboardView keyboardView;
-    private DsetKeyboard dsetKeyboard;
+    private final DsetKeyboard dsetKeyboard;
 
     public void setKeyboardView(SecretKeyboardView keyboardView) {
         this.keyboardView = keyboardView;

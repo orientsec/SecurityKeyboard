@@ -2,10 +2,11 @@ package com.dfzq.dset;
 
 import android.content.Context;
 import android.graphics.Rect;
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
+
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 /**
  * Created by zhanglei on 2017/5/17.
@@ -27,6 +28,10 @@ public class SecurityAutoCompleteEditText extends AppCompatAutoCompleteTextView 
     public SecurityAutoCompleteEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
+    }
+
+    public void setVoiceInputStateChangeListener(VoiceInputStateChangeListener voiceInputStateChangeListener) {
+        this.voiceInputStateChangeListener = voiceInputStateChangeListener;
     }
 
     public int getType() {

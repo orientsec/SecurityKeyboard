@@ -15,6 +15,8 @@ import com.dfzq.dset.provider.DefaultRecognizer;
 import com.dfzq.dset.provider.Recognizer;
 import com.dfzq.dset.provider.RecognizerListener;
 
+import javax.inject.Provider;
+
 /**
  * Created by djy on 2018/1/4.
  */
@@ -25,9 +27,9 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
     private ImageView voiceImg;
     private String preText = "";
     private boolean stopFlag;
-    private Recognizer recognizer;
+    private final Recognizer recognizer;
     private TextView tvTitle;
-    private TextView changeTv;
+    private final TextView changeTv;
     private LinearLayout voiceBg;
 
     public VoiceRecognizer(View voiceLayout, TextView changeTv) {

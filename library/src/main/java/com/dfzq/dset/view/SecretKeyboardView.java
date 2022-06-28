@@ -32,7 +32,7 @@ public class SecretKeyboardView extends KeyboardView {
 
     protected boolean isHideEnable = true;
 
-    private Paint paint = new Paint();
+    private final Paint paint = new Paint();
 
     public SecretKeyboardView(Context context, AttributeSet attrs) {
         super(context, attrs);

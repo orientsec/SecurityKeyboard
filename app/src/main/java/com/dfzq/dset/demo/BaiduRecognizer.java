@@ -20,7 +20,7 @@ import java.util.Map;
 public class BaiduRecognizer implements Recognizer {
     private static final class BaiduListener implements EventListener {
         private WeakReference<RecognizerListener> listenerWeakReference;
-        private static BaiduListener instance = new BaiduListener();
+        private static final BaiduListener instance = new BaiduListener();
 
         void setRecognizerListener(RecognizerListener listener) {
             listenerWeakReference = new WeakReference<>(listener);
@@ -68,7 +68,7 @@ public class BaiduRecognizer implements Recognizer {
         }
     }
 
-    private EventManager asr;
+    private final EventManager asr;
 
     public BaiduRecognizer(Context context) {
         asr = EventManagerFactory.create(context, "asr");

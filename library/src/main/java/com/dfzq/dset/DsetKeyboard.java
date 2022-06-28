@@ -35,15 +35,15 @@ import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_STOCK_NUM;
 
 class DsetKeyboard {
     private SecretKeyboardView keyboardView;
-    private View voiceLayout;
-    private ViewGroup frameLayout;
+    private final View voiceLayout;
+    private final ViewGroup frameLayout;
     private Dialog dialog;
     private EditText editText;
-    private Context context;
-    private VoiceRecognizer recognizer;
+    private final Context context;
+    private final VoiceRecognizer recognizer;
     private PopupWindow popupWindow;
     private LottieAnimationView animationView;
-    private Handler handler = new Handler(Looper.getMainLooper()) {
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -71,12 +71,9 @@ class DsetKeyboard {
         dialog = new KeyboardDialog(context, R.style.dsetKeyboardDialog);
         voiceLayout = dialog.findViewById(R.id.voice_layout);
         View btnVoice = dialog.findViewById(R.id.btn_voice);
-        dialog.findViewById(R.id.rl_switch_system_keyboard).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (editText != null && editText instanceof SecurityEditTextInterface) {
-                    ((SecurityEditTextInterface) editText).switchSoftKeyboardWithSystem();
-                }
+        dialog.findViewById(R.id.rl_switch_system_keyboard).setOnClickListener(v -> {
+            if (editText != null && editText instanceof SecurityEditTextInterface) {
+                ((SecurityEditTextInterface) editText).switchSoftKeyboardWithSystem();
             }
         });
         TextView changeTv = dialog.findViewById(R.id.rl_switch_system_keyboard);
@@ -89,12 +86,9 @@ class DsetKeyboard {
         LayoutInflater.from(context).inflate(R.layout.dset_keyboard_layout, parent);
         voiceLayout = parent.findViewById(R.id.voice_layout);
         View btnVoice = parent.findViewById(R.id.btn_voice);
-        parent.findViewById(R.id.rl_switch_system_keyboard).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (editText != null && editText instanceof SecurityEditTextInterface) {
-                    ((SecurityEditTextInterface) editText).switchSoftKeyboardWithSystem();
-                }
+        parent.findViewById(R.id.rl_switch_system_keyboard).setOnClickListener(v -> {
+            if (editText != null && editText instanceof SecurityEditTextInterface) {
+                ((SecurityEditTextInterface) editText).switchSoftKeyboardWithSystem();
             }
         });
         TextView changeTv = parent.findViewById(R.id.rl_switch_system_keyboard);

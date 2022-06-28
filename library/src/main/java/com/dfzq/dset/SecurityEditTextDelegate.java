@@ -1,18 +1,14 @@
 package com.dfzq.dset;
 
+import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_NUM;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
-import android.os.Build;
-import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-
-import java.lang.reflect.Method;
-
-import static com.dfzq.dset.view.SecretKeyboardView.KEYBOARD_NUM;
 
 /**
  * Created by meihu on 2017/6/27.
@@ -26,7 +22,7 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
 
     private int keyboardFrameId;
 
-    private EditText editText;
+    private final EditText editText;
 
     private boolean isHide;
 
@@ -37,21 +33,7 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
     @Override
     public void init(Context context) {
         editText.setClickable(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            editText.setShowSoftInputOnFocus(false);
-        } else if (Build.VERSION.SDK_INT >= 14) {
-            try {
-                Class<EditText> cls = EditText.class;
-                Method setShowSoftInputOnFocus;
-                setShowSoftInputOnFocus = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
-                setShowSoftInputOnFocus.setAccessible(true);
-                setShowSoftInputOnFocus.invoke(editText, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            editText.setInputType(InputType.TYPE_NULL);
-        }
+        editText.setShowSoftInputOnFocus(false);
     }
 
     @Override
@@ -181,12 +163,9 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         if (hasWindowFocus && editText.hasFocus()) {
-            editText.post(new Runnable() {
-                @Override
-                public void run() {
-                    hideSystemSoftKeyboard();
-                    KeyboardManager.getInstance().showSoftInput(editText);
-                }
+            editText.post(() -> {
+                hideSystemSoftKeyboard();
+                KeyboardManager.getInstance().showSoftInput(editText);
             });
         }
     }
