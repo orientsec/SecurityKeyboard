@@ -57,8 +57,8 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
     }
 
     public void cancel() {
-        recognizer.cancel();
         stopSpeech();
+        recognizer.cancel();
     }
 
     private void startVoice() {
@@ -78,25 +78,7 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
         int action = motionEvent.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                startVoice();
-                if (voiceImg != null) {
-                    voiceImg.setBackgroundResource(R.drawable.dset_keyboard_voice_speech_on_white);
-                }
-                if (tvTitle != null) {
-                    tvTitle.setText(R.string.voice_release_tips);
-                    tvTitle.setTextColor(ContextCompat.getColor(view.getContext(), R.color.dset_white));
-                }
-                if (voiceBg != null) {
-                    voiceBg.setBackgroundResource(R.drawable.corner_gray_bg);
-                }
-                if (editText != null) {
-                    ((SecurityEditTextInterface) editText).onVoiceStateChanged(1);
-                }
-                if (changeTv != null) {
-                    changeTv.setVisibility(View.GONE);
-                }
-                stopFlag = true;
-                KeyboardManager.getInstance().showVoiceLineView(editText, true);
+                startSpeech();
                 break;
             case MotionEvent.ACTION_UP:
                 stopSpeech();
@@ -110,6 +92,27 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
         return true;
     }
 
+    private void startSpeech() {
+        if (voiceImg != null) {
+            voiceImg.setBackgroundResource(R.drawable.dset_keyboard_voice_speech_on_white);
+        }
+        if (tvTitle != null) {
+            tvTitle.setText(R.string.voice_release_tips);
+            tvTitle.setTextColor(ContextCompat.getColor(tvTitle.getContext(), R.color.dset_white));
+        }
+        if (voiceBg != null) {
+            voiceBg.setBackgroundResource(R.drawable.corner_gray_bg);
+        }
+        if (editText != null) {
+            ((SecurityEditTextInterface) editText).onVoiceStateChanged(1);
+        }
+        if (changeTv != null) {
+            changeTv.setVisibility(View.GONE);
+        }
+        stopFlag = true;
+        KeyboardManager.getInstance().showVoiceLineView(editText, true);
+        startVoice();
+    }
 
     private void stopSpeech() {
         if (tvTitle != null) {

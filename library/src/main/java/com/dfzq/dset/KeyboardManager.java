@@ -88,7 +88,7 @@ public class KeyboardManager {
 
     public void showVoiceLineView(EditText editText, boolean flag) {
         if (editText != null) {
-            DsetKeyboard keyboard = getKeyboard(editText);
+            DsetKeyboard keyboard = getKeyboard(editText, false);
             if (keyboard == null) {
                 return;
             }

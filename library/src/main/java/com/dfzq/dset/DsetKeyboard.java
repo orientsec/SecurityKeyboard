@@ -113,14 +113,10 @@ class DsetKeyboard {
         if (recognizer != null) {
             recognizer.cancel();
         }
-        if (dialog != null) {
-            if (dialog.isShowing()) {
-                handler.removeMessages(1);
-                handler.sendEmptyMessageDelayed(2, 30);
-                return true;
-            } else {
-                return false;
-            }
+        if (dialog != null && dialog.isShowing()) {
+            handler.removeMessages(1);
+            handler.sendEmptyMessageDelayed(2, 30);
+            return true;
         } else {
             return false;
         }
