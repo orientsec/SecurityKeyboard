@@ -150,12 +150,12 @@ public class KeyboardManager {
         DsetKeyboard keyboard = null;
         if (frameId > 0) {
             ViewGroup parent = editText.getRootView().findViewById(frameId);
-            Object tag = parent.getTag(10010);
+            Object tag = parent.getTag(R.id.dset_keyboard_id);
             if (tag instanceof DsetKeyboard) {
                 keyboard = (DsetKeyboard) tag;
             } else if (tag == null && autoBuild) {
                 keyboard = new DsetKeyboard(parent);
-                parent.setTag(10010, keyboard);
+                parent.setTag(R.id.dset_keyboard_id, keyboard);
             }
         } else {
             AppCompatActivity activity = getActivity(editText.getContext());

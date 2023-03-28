@@ -1,8 +1,8 @@
 <resources>
     <string name="dset_finish">完成</string>
-    <string name="chinese_keyboard">普通键盘</string>
-    <string name="chinese">中文</string>
-    <string name="voice_tips">按住说话</string>
-    <string name="voice_release_tips">松手完成</string>
+    <string name="dset_chinese_keyboard">普通键盘</string>
+    <string name="dset_chinese">中文</string>
+    <string name="dset_voice_tips">按住说话</string>
+    <string name="dset_voice_release_tips">松手完成</string>
     <string name="dset_release_cancel_desc">手指上滑，取消搜索</string>
 </resources>

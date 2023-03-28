@@ -97,7 +97,7 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
             voiceImg.setBackgroundResource(R.drawable.dset_keyboard_voice_speech_on_white);
         }
         if (tvTitle != null) {
-            tvTitle.setText(R.string.voice_release_tips);
+            tvTitle.setText(R.string.dset_voice_release_tips);
             tvTitle.setTextColor(ContextCompat.getColor(tvTitle.getContext(), R.color.dset_white));
         }
         if (voiceBg != null) {
@@ -116,7 +116,7 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
 
     private void stopSpeech() {
         if (tvTitle != null) {
-            tvTitle.setText(R.string.voice_tips);
+            tvTitle.setText(R.string.dset_voice_tips);
             tvTitle.setTextColor(ContextCompat.getColor(tvTitle.getContext(), R.color.dset_text_black));
         }
         if (voiceImg != null) {

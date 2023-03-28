@@ -117,7 +117,7 @@
         <Key
             android:codes="-16"
             android:keyWidth="15.5%p"
-            android:keyLabel="@string/chinese" />
+            android:keyLabel="@string/dset_chinese" />
         <Key
             android:codes="32"
             android:keyWidth="30.6%p" />

@@ -24,7 +24,7 @@
         android:drawableStart="@drawable/arrow_left"
         android:drawablePadding="5dp"
         android:gravity="center"
-        android:text="@string/chinese_keyboard"
+        android:text="@string/dset_chinese_keyboard"
         android:textColor="@color/dset_text_black"
         android:textSize="16sp" />
 
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="@string/voice_tips"
+            android:text="@string/dset_voice_tips"
             android:textColor="@color/dset_text_black"
             android:textSize="15sp" />
 

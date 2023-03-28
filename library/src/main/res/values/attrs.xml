@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <attr name="keyboardVoice" format="boolean" />
     <attr name="keyboardFrameId" format="reference" />
     <attr name="inputType" format="enum">
@@ -16,4 +15,5 @@
         <attr name="inputType" />
         <attr name="keyboardFrameId" />
     </declare-styleable>
+    <item name="dset_keyboard_id" type="id" />
 </resources>
