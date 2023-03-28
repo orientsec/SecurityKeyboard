@@ -5,18 +5,19 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Looper;
 import android.util.SparseIntArray;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.dfzq.dset.provider.Recognizer;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import javax.inject.Provider;
 
@@ -37,8 +38,7 @@ public class KeyboardManager {
     private WeakReference<DsetKeyboard> keyboardWeakReference;
     private boolean confuse;
     private SparseIntArray keys = new SparseIntArray();
-    private final Map<View, DsetKeyboard> viewKeyboardMap = new WeakHashMap<>();
-    private final Map<Activity, DsetKeyboard> dialogKeyboardMap = new WeakHashMap<>();
+    private final Map<Activity, DsetKeyboard> dialogKeyboardMap = new HashMap<>();
     private Provider<Recognizer> provider;
 
     private static final class KeyboardManagerHolder {
@@ -147,53 +147,48 @@ public class KeyboardManager {
 
     private DsetKeyboard getKeyboard(EditText editText, boolean autoBuild) {
         int frameId = ((SecurityEditTextInterface) editText).getKeyboardFrameId();
-        DsetKeyboard keyboard;
+        DsetKeyboard keyboard = null;
         if (frameId > 0) {
             ViewGroup parent = editText.getRootView().findViewById(frameId);
-            keyboard = viewKeyboardMap.get(parent);
-            if (keyboard == null && autoBuild) {
+            Object tag = parent.getTag(10010);
+            if (tag instanceof DsetKeyboard) {
+                keyboard = (DsetKeyboard) tag;
+            } else if (tag == null && autoBuild) {
                 keyboard = new DsetKeyboard(parent);
-                viewKeyboardMap.put(parent, keyboard);
+                parent.setTag(10010, keyboard);
             }
         } else {
-            FragmentActivity activity = getActivity(editText.getContext());
-            if (activity == null) {
-                return null;
-            }
-            keyboard = dialogKeyboardMap.get(activity);
-            if (dialogKeyboardMap.get(activity) == null && autoBuild) {
-                keyboard = new DsetKeyboard(activity);
-                dialogKeyboardMap.put(activity, keyboard);
-                activity.getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(new MonitorFragment(), "Orientsec-keyboard-holder")
-                        .commitAllowingStateLoss();
+            AppCompatActivity activity = getActivity(editText.getContext());
+            if (activity != null) {
+                keyboard = dialogKeyboardMap.get(activity);
+                if (dialogKeyboardMap.get(activity) == null && autoBuild) {
+                    keyboard = new DsetKeyboard(activity);
+                    dialogKeyboardMap.put(activity, keyboard);
+
+                    activity.getLifecycle().addObserver(new DefaultLifecycleObserver() {
+                        @Override
+                        public void onDestroy(@NonNull LifecycleOwner owner) {
+                            DsetKeyboard keyboard = dialogKeyboardMap.remove(activity);
+                            if (keyboard != null) {
+                                keyboard.hideKeyboardImme();
+                            }
+                        }
+                    });
+                }
             }
         }
         return keyboard;
     }
 
-    private FragmentActivity getActivity(Context context) {
+    private AppCompatActivity getActivity(Context context) {
         Context baseContext = context;
         while (baseContext instanceof ContextWrapper) {
-            if (baseContext instanceof FragmentActivity) {
-                return (FragmentActivity) baseContext;
+            if (baseContext instanceof AppCompatActivity) {
+                return (AppCompatActivity) baseContext;
             }
             baseContext = ((ContextWrapper) baseContext).getBaseContext();
         }
         return null;
     }
 
-    public static final class MonitorFragment extends Fragment {
-        @Override
-        public void onDestroy() {
-            super.onDestroy();
-            Activity activity;
-            if ((activity = getActivity()) == null) return;
-            DsetKeyboard keyboard = KeyboardManager.getInstance().dialogKeyboardMap.remove(activity);
-            if (keyboard != null) {
-                keyboard.hideKeyboardImme();
-            }
-        }
-    }
 }
