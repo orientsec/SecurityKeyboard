@@ -24,6 +24,9 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
 
     private final EditText editText;
 
+    /**
+     * 自定义键盘是否隐藏
+     */
     private boolean isHide;
 
     public SecurityEditTextDelegate(EditText editText) {
@@ -104,6 +107,11 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
         isHide = false;
         InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        editText.postDelayed(() -> {
+            if (editText.isFocused() && !isHide) {
+                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+            }
+        }, 1000);
     }
 
     @Override
