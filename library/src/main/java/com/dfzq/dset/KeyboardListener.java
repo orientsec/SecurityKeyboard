@@ -97,6 +97,7 @@ class KeyboardListener implements KeyboardView.OnKeyboardActionListener {
             case KEYCODE_DONE:
             case KEYCODE_ALT: {
                 if (((SecurityEditTextInterface) editText).isHideEnable()) {
+                    ((SecurityEditTextInterface) editText).hideSystemSoftKeyboard();
                     ((SecurityEditTextInterface) editText).hideSoftKeyboard();
                 }
             }
