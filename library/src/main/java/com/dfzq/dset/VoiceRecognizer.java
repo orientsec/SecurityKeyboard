@@ -1,6 +1,8 @@
 package com.dfzq.dset;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -93,6 +95,11 @@ public class VoiceRecognizer implements View.OnTouchListener, RecognizerListener
     }
 
     private void startSpeech() {
+        if (ContextCompat.checkSelfPermission(editText.getContext(),
+                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            recognizer.requestPermission();
+            return;
+        }
         if (voiceImg != null) {
             voiceImg.setBackgroundResource(R.drawable.dset_keyboard_voice_speech_on_white);
         }

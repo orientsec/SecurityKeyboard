@@ -6,8 +6,8 @@ import com.baidu.speech.EventListener;
 import com.baidu.speech.EventManager;
 import com.baidu.speech.EventManagerFactory;
 import com.baidu.speech.asr.SpeechConstant;
-import com.dfzq.dset.provider.RecognizerListener;
 import com.dfzq.dset.provider.Recognizer;
+import com.dfzq.dset.provider.RecognizerListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class BaiduRecognizer implements Recognizer {
+    private PermissionListener permissionListener;
     private static final class BaiduListener implements EventListener {
         private WeakReference<RecognizerListener> listenerWeakReference;
         private static final BaiduListener instance = new BaiduListener();
@@ -70,9 +71,10 @@ public class BaiduRecognizer implements Recognizer {
 
     private final EventManager asr;
 
-    public BaiduRecognizer(Context context) {
+    public BaiduRecognizer(Context context, PermissionListener permissionListener) {
         asr = EventManagerFactory.create(context, "asr");
         asr.registerListener(BaiduListener.instance);
+        this.permissionListener = permissionListener;
         loadOfflineEngine();
     }
 
@@ -81,6 +83,11 @@ public class BaiduRecognizer implements Recognizer {
         params.put(SpeechConstant.DECODER, 2);
         params.put(SpeechConstant.ASR_OFFLINE_ENGINE_GRAMMER_FILE_PATH, "assets://baidu_speech_grammar.bsg");
         asr.send(SpeechConstant.ASR_KWS_LOAD_ENGINE, new JSONObject(params).toString(), null, 0, 0);
+    }
+
+    @Override
+    public void requestPermission() {
+        permissionListener.requestPermission();
     }
 
     @Override
@@ -116,5 +123,7 @@ public class BaiduRecognizer implements Recognizer {
         BaiduListener.instance.setRecognizerListener(listener);
     }
 
-
+    interface PermissionListener {
+        void requestPermission();
+    }
 }

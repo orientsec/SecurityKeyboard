@@ -2,6 +2,11 @@ package com.dfzq.dset.provider;
 
 public interface Recognizer {
     /**
+     * 请求录音权限
+     */
+    void requestPermission();
+
+    /**
      * 取消语音识别服务
      */
     void cancel();

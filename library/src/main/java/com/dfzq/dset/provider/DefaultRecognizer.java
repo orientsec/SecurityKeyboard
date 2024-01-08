@@ -3,6 +3,11 @@ package com.dfzq.dset.provider;
 public class DefaultRecognizer implements Recognizer {
 
     @Override
+    public void requestPermission() {
+
+    }
+
+    @Override
     public void cancel() {
 
     }
