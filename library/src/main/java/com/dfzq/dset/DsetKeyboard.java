@@ -286,8 +286,8 @@ class DsetKeyboard {
 
         for (int i = 0; i < size; i++) {
 
-            int random_a = (int) (Math.random() * (size - 10)) + 10;
-            int random_b = (int) (Math.random() * (size - 10)) + 10;
+            int random_a = (int) (Math.random() * (size));
+            int random_b = (int) (Math.random() * (size));
 
             if ((!NONE_TYPICAL_INDEX.contains(random_a)) && (!NONE_TYPICAL_INDEX.contains(random_b))) {
                 int code = keyList.get(random_a).codes[0];

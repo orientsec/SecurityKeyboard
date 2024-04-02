@@ -39,7 +39,7 @@ class KeyboardDialog extends Dialog implements View.OnClickListener {
         window.setWindowAnimations(R.style.dsetDialogWindowAnim); //设置窗口弹出动画
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.flags = FLAG_NOT_FOCUSABLE;// | FLAG_ALT_FOCUSABLE_IM | FLAG_WATCH_OUTSIDE_TOUCH;// | FLAG_NOT_TOUCH_MODAL;
+        lp.flags = FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SECURE;// | FLAG_ALT_FOCUSABLE_IM | FLAG_WATCH_OUTSIDE_TOUCH;// | FLAG_NOT_TOUCH_MODAL;
         //window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         setCanceledOnTouchOutside(false);
         setContentView(R.layout.dset_keyboard_layout);
