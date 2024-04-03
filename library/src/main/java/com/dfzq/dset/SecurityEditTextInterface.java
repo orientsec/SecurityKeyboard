@@ -72,4 +72,12 @@ interface SecurityEditTextInterface {
     boolean isHide();
 
     void switchSoftKeyboardWithSystem();
+
+    /**
+     * 是否屏蔽录屏
+     * @param mask
+     */
+    void setMask(boolean mask);
+
+    boolean isMask();
 }

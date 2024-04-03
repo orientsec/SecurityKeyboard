@@ -29,6 +29,8 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
      */
     private boolean isHide;
 
+    private boolean safe;
+
     public SecurityEditTextDelegate(EditText editText) {
         this.editText = editText;
     }
@@ -80,6 +82,15 @@ public class SecurityEditTextDelegate implements SecurityEditTextInterface {
                 showSystemSoftKeyboard();
             }
         }
+    }
+
+    @Override
+    public void setMask(boolean mask) {
+        this.safe = mask;
+    }
+
+    public boolean isMask() {
+        return safe;
     }
 
     @Override

@@ -10,6 +10,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
@@ -157,7 +159,7 @@ class DsetKeyboard {
         }
     }
 
-    void showKeyboard(EditText editText, int type, boolean voice) {
+    void showKeyboard(EditText editText, int type, boolean voice, boolean isMask) {
         this.editText = editText;
         if (recognizer != null) {
             recognizer.setEditText(editText);
@@ -169,6 +171,10 @@ class DsetKeyboard {
         }
         setKeyboardView(type);
         if (dialog != null) {
+            Window window = dialog.getWindow();
+            if (isMask && window != null) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+            }
             handler.removeMessages(2);
             handler.sendEmptyMessageDelayed(1, 30);
         }

@@ -6,7 +6,6 @@ import android.content.ContextWrapper;
 import android.os.Looper;
 import android.util.SparseIntArray;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -109,7 +108,7 @@ public class KeyboardManager {
         if (keyboard == null) {
             return false;
         }
-        keyboard.showKeyboard(editText, securityEditTextInterface.getType(), securityEditTextInterface.getVoice());
+        keyboard.showKeyboard(editText, securityEditTextInterface.getType(), securityEditTextInterface.getVoice(), securityEditTextInterface.isMask());
         keyboardWeakReference = new WeakReference<>(keyboard);
         return true;
 
@@ -149,7 +148,6 @@ public class KeyboardManager {
     private DsetKeyboard getKeyboard(EditText editText, boolean autoBuild) {
         int frameId = ((SecurityEditTextInterface) editText).getKeyboardFrameId();
         DsetKeyboard keyboard = null;
-        AppCompatActivity activity = getActivity(editText.getContext());
         if (frameId > 0) {
             ViewGroup parent = editText.getRootView().findViewById(frameId);
             Object tag = parent.getTag(R.id.dset_keyboard_id);
@@ -159,10 +157,8 @@ public class KeyboardManager {
                 keyboard = new DsetKeyboard(parent);
                 parent.setTag(R.id.dset_keyboard_id, keyboard);
             }
-            if (activity != null) {
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-            }
         } else {
+            AppCompatActivity activity = getActivity(editText.getContext());
             if (activity != null) {
                 keyboard = dialogKeyboardMap.get(activity);
                 if (dialogKeyboardMap.get(activity) == null && autoBuild) {

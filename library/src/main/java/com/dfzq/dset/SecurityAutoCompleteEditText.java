@@ -165,4 +165,14 @@ public class SecurityAutoCompleteEditText extends AppCompatAutoCompleteTextView 
     public void switchSoftKeyboardWithSystem() {
         delegate.switchSoftKeyboardWithSystem();
     }
+
+    @Override
+    public void setMask(boolean mask) {
+        delegate.setMask(mask);
+    }
+
+    @Override
+    public boolean isMask() {
+        return delegate.isMask();
+    }
 }
